@@ -7,7 +7,12 @@ import bodyParser from 'body-parser';
 
 import { V0MODELS } from './controllers/v0/model.index';
 
+import 'dotenv/config';
+
+//require('dotenv').config() ;
+
 (async () => {
+  //definition du modèle qui sera importé
   await sequelize.addModels(V0MODELS);
   await sequelize.sync();
 
@@ -35,5 +40,6 @@ import { V0MODELS } from './controllers/v0/model.index';
   app.listen( port, () => {
       console.log( `server running http://localhost:${ port }` );
       console.log( `press CTRL+C to stop server` );
+      console.log(process.env.AWS_MEDIA_BUCKET);
   } );
 })();

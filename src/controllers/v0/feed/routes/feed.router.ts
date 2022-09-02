@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import { FeedItem } from '../models/FeedItem';
 import { requireAuth } from '../../users/routes/auth.router';
 import * as AWS from '../../../../aws';
+import { ConnectionAcquireTimeoutError } from 'sequelize/types';
+
 
 const router: Router = Router();
 
@@ -18,6 +20,25 @@ router.get('/', async (req: Request, res: Response) => {
 
 //@TODO
 //Add an endpoint to GET a specific resource by Primary Key
+router.get( "/feed/:id", async ( req: Request, res: Response ) => {
+  let { id } = req.params;
+
+  if ( !id ) {
+    return res.status(400)
+              .send(`id is required`);
+  }
+
+  //on essaie de trouve run car en fonction de l'id
+  const feeds = await FeedItem.findByPk(id);
+
+  //element non trouvé
+  /*if(feeds && feeds.length ===0){
+    return res.status(404).send('item is not found');
+  }*/
+
+  //si l'élement recherché est trouvé
+  return res.status(200).send(feeds instanceof FeedItem);
+});
 
 // update a specific resource
 router.patch('/:id', 
